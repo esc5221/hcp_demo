@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Eye Tracking with WebGazer</title>
+  <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+  <style>
+    #webgazerVideoFeed {
+      width: 640px;
+      height: 480px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Webcam Feed</h2>
+  <video id="webgazerVideoFeed" autoplay></video>
+
+  <h2>Eye Position</h2>
+  <p id="eyePosition">X: 0, Y: 0</p>
+
+  <script>
+    window.onload = function () {
+      // Set up WebGazer
+      webgazer.setGazeListener(function (data, elapsedTime) {
+        if (data) {
+          console.log(data);
+          var eyePosition = document.getElementById('eyePosition');
+          var middleEyeImagex = (data.eyeFeatures.left.imagex + data.eyeFeatures.right.imagex) / 2;
+          var middleEyeImagey = (data.eyeFeatures.left.imagey + data.eyeFeatures.right.imagey) / 2;
+          eyePosition.textContent = `X: ${middleEyeImagex.toFixed(0)}, Y: ${middleEyeImagey.toFixed(0)}`;
+        }
+      }).begin();
+
+
+      // Handle the video feed
+      var video = document.getElementById('webgazerVideoFeed');
+      navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+        video.srcObject = stream;
+      }).catch(function (error) {
+        console.log("Error accessing the webcam: ", error);
+      });
+    };
+
+    // Clean up on window unload
+    window.onbeforeunload = function () {
+      webgazer.end();
+    }
+  </script>
+</body>
+
+</html>
