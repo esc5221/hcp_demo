@@ -38,6 +38,7 @@ const EyeTracker = ({}) => {
                 })
                 .begin();
             webGazerRef.current.applyKalmanFilter(true);
+            webGazerRef.current.showPredictionPoints(false);
         };
 
         return () => {

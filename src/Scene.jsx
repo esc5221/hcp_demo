@@ -18,7 +18,7 @@ export function OpenedRoom({ scale = 10, width = 1, height = 1, depth = 1, ...pr
             {/* Floor */}
             <mesh position={[0, -height / 2, 0]}>
                 <boxGeometry args={[wallSize[0], wallWidth, wallSize[2]]} />
-                <meshStandardMaterial color="#526070" />
+                <meshStandardMaterial color="#555566" />
             </mesh>
 
             {/* Ceiling */}
@@ -51,11 +51,15 @@ export function OpenedRoom({ scale = 10, width = 1, height = 1, depth = 1, ...pr
     );
 }
 
-export function Box({ scale = 1, ...props }) {
+export function Box({ scale = 1, autorotate = true, ...props }) {
     const ref = useRef();
     const [hovered, hover] = useState(false);
     const [clicked, click] = useState(false);
-    useFrame((state, delta) => (ref.current.rotation.x = ref.current.rotation.y += delta));
+    useFrame((state, delta) => {
+        if (autorotate) {
+            ref.current.rotation.x = ref.current.rotation.y += delta;
+        }
+    });
     return (
         <mesh
             {...props}
